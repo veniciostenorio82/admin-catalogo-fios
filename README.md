@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Admin Catálogo
 
-## Getting Started
+Painel administrativo para o catálogo de peças Fios na Areia, construído com Next.js App Router, React e TypeScript.
 
-First, run the development server:
+## Desenvolvimento
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API e configuração
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+O servidor usa a conexão PostgreSQL configurada em `DATABASE` (somente server-side) e expõe:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `GET /api/products` — lista as peças;
+- `POST /api/products` — cria uma peça;
+- `PATCH /api/products/:id` — atualiza campos enviados;
+- `DELETE /api/products/:id` — exclui a peça.
 
-## Learn More
+As rotas usam as colunas existentes `id`, `"productName"`, `price`, `description`, `images` e `category` da tabela `products`. Listagem não exige token; as operações de escrita exigem `ADMIN_API_TOKEN` no servidor e o mesmo token deve ser informado no campo do painel. O token digitado permanece apenas na memória da página e não é registrado em logs.
 
-To learn more about Next.js, take a look at the following resources:
+O esquema atual aceita uma URL em `images`. A interface permite cadastrar ou remover essa URL, mas upload de arquivos e várias imagens por peça precisam de armazenamento e alteração compatível do esquema e do catálogo público. As categorias encontradas não têm enumeração oficial, então as opções existentes são preservadas na edição.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Não há gravação simulada nem acesso do navegador ao banco de dados. Configure `DATABASE` e `ADMIN_API_TOKEN` no ambiente do servidor; não use prefixo `NEXT_PUBLIC_` nem inclua valores secretos no repositório.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Verificação
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+npm run build
+```
